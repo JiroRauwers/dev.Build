@@ -1,0 +1,65 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--vscode-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  padding: 0 10px;
+}
+
+.sidebar-title {
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: var(--vscode-titleBar-activeForeground);
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.input-group {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.sidebar-input {
+  flex: 1;
+  padding: 6px 8px;
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 2px;
+}
+
+.sidebar-button {
+  margin-left: 5px;
+  padding: 6px 12px;
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.sidebar-button:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+.sidebar-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+}
+
+.sidebar-list-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--vscode-list-inactiveSelectionBackground);
+}
+
+.sidebar-list-item:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}

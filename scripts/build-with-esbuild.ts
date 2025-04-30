@@ -1,4 +1,12 @@
 import esbuild from "esbuild";
-import config from "./esbuild.config";
+import { configs } from "./esbuild.config";
 
-esbuild.build(config).catch(() => process.exit(1));
+// Build all configs (extension and webview)
+Promise.all(configs.map((config) => esbuild.build(config)))
+  .then(() => {
+    console.log("Build completed successfully!");
+  })
+  .catch((error) => {
+    console.error("Build failed:", error);
+    process.exit(1);
+  });

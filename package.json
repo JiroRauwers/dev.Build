@@ -2,10 +2,14 @@
   "main": "./dist/extension.cjs",
   "module": "index.ts",
   "dependencies": {
-    "@types/vscode": "^1.86.0"
+    "@types/vscode": "^1.86.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "@vscode/vsce": "^2.23.0",
     "esbuild": "^0.20.0"
   },
@@ -30,13 +34,34 @@
     "type": "git",
     "url": "https://github.com/JiroRauwers/dev.Build.git"
   },
+  "activationEvents": [
+    "onView:dev.Build.sidebarView"
+  ],
   "contributes": {
     "commands": [
       {
         "command": "dev.Build.helloworld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dev-build-sidebar",
+          "title": "Dev Build",
+          "icon": "resources/sidebar-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "dev-build-sidebar": [
+        {
+          "id": "dev.Build.sidebarView",
+          "name": "Dev Build",
+          "type": "webview"
+        }
+      ]
+    }
   },
   "engines": {
     "vscode": "^1.86.0"

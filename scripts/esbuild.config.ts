@@ -1,8 +1,17 @@
 import type { BuildOptions } from "esbuild";
 
-const config: BuildOptions = {
-  entryPoints: ["./src/extension.ts"],
+// Common configuration settings
+const commonConfig: BuildOptions = {
   bundle: true,
+  minify: true,
+  sourcemap: true,
+  logLevel: "info",
+};
+
+// Extension host bundle configuration
+const extensionConfig: BuildOptions = {
+  ...commonConfig,
+  entryPoints: ["./src/extension.ts"],
   platform: "node",
   target: "node12",
   outdir: "./dist",
@@ -16,7 +25,37 @@ const config: BuildOptions = {
     ".ts": "ts",
     ".js": "js",
   },
-  logLevel: "info",
 };
 
-export default config;
+// Webview (React) bundle configuration
+const webviewConfig: BuildOptions = {
+  ...commonConfig,
+  entryPoints: ["./src/webview/index.tsx"],
+  platform: "browser",
+  target: "es2020",
+  outdir: "./dist/webview",
+  format: "esm",
+  loader: {
+    ".ts": "ts",
+    ".js": "js",
+    ".tsx": "tsx",
+    ".jsx": "jsx",
+    ".css": "css", // Changed from 'text' to 'css'
+    ".svg": "dataurl",
+    ".png": "dataurl",
+    ".jpg": "dataurl",
+    ".gif": "dataurl",
+  },
+  jsx: "automatic", // Use React automatic JSX transform
+  define: {
+    "process.env.NODE_ENV": '"production"',
+  },
+  // Enable CSS bundling
+  bundle: true,
+  metafile: true,
+  // Allow tree shaking of CSS but mark css files as having side effects
+  treeShaking: true,
+};
+
+export const configs = [extensionConfig, webviewConfig];
+export default extensionConfig;
