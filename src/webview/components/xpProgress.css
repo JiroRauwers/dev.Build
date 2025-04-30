@@ -1,0 +1,54 @@
+.xp-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.xp-level {
+  font-size: 1rem;
+  white-space: nowrap;
+  color: #e0e0e0;
+}
+
+.xp-bar-container {
+  flex: 1;
+  height: 1.25rem; /* Adjusted to be thinner than original but not too thin */
+  background-color: #1a1a1a;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.xp-bar {
+  height: 100%;
+  background: linear-gradient(to right, #3b82f6, #60a5fa);
+  transition: width 0.5s ease;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
+
+.xp-values {
+  font-size: 1rem;
+  white-space: nowrap;
+  color: #e0e0e0;
+}
+
+@media (max-width: 480px) {
+  .xp-progress {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .xp-level,
+  .xp-values {
+    text-align: center;
+  }
+
+  .xp-level {
+    margin-bottom: 0.25rem;
+  }
+
+  .xp-values {
+    margin-top: 0.25rem;
+  }
+}

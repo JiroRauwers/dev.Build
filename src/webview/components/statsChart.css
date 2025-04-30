@@ -1,0 +1,25 @@
+.stats-chart {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  width: 100%;
+}
+
+.stats-chart canvas {
+  display: block;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .stats-chart {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-chart {
+    height: 220px;
+  }
+}

@@ -1,0 +1,49 @@
+.achievements-list h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #a0a0a0;
+}
+
+.achievements-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.achievement-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.achievement-icon-yellow {
+  color: #e2c94f;
+}
+
+.achievement-icon-green {
+  color: #4caf50;
+}
+
+.achievement-icon-gray {
+  color: #888;
+}
+
+.achievement-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.achievement-title {
+  font-size: 1.125rem;
+  color: #e0e0e0;
+}
+
+.achievement-expired {
+  font-size: 0.75rem;
+  color: #888;
+}
