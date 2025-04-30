@@ -11,7 +11,8 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vscode/vsce": "^2.23.0",
-    "esbuild": "^0.20.0"
+    "esbuild": "^0.20.0",
+    "fast-glob": "^3.3.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

@@ -93,6 +93,14 @@ class SidebarViewProvider implements vscode.WebviewViewProvider {
       <body>
         <div id="root"></div>
         <script nonce="${nonce}" src="${scriptUri}"></script>
+        <script>
+          const ws = new WebSocket("ws://localhost:3001");
+          ws.onmessage = (event) => {
+            if (event.data === "reload") {
+              location.reload();
+            }
+          };
+        </script>
       </body>
       </html>`;
   }
@@ -116,7 +124,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   const helloWorldCommand = vscode.commands.registerCommand(
     "dev.Build.helloworld",
     () => {
-      vscode.window.showInformationMessage("Hello World!");
+      vscode.window.showInformationMessage("Hello World! now!");
     }
   );
   context.subscriptions.push(helloWorldCommand);

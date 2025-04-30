@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Sidebar.css";
+import { Button } from "./Button";
 
 interface SidebarProps {
   vscode: {
@@ -34,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ vscode }) => {
 
   return (
     <div className="sidebar">
-      <h2 className="sidebar-title">Vai se fode luis</h2>
+      <h2 className="sidebar-title">test</h2>
 
       <div className="sidebar-content">
         <div className="input-group">
@@ -45,9 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ vscode }) => {
             placeholder="Add new item..."
             className="sidebar-input"
           />
-          <button onClick={handleAddItem} className="sidebar-button">
-            Add
-          </button>
+          <Button onClick={handleAddItem}> teste Add</Button>
         </div>
 
         <ul className="sidebar-list">

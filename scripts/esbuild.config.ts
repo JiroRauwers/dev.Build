@@ -1,4 +1,6 @@
 import type { BuildOptions } from "esbuild";
+// @ts-expect-error - fast-glob is not typed
+import fg from "fast-glob";
 
 // Common configuration settings
 const commonConfig: BuildOptions = {
@@ -27,10 +29,13 @@ const extensionConfig: BuildOptions = {
   },
 };
 
+// Dynamically resolve entry points for the webview
+const webviewEntryPoints = fg.sync("src/webview/**/*.{ts,tsx,css}");
+
 // Webview (React) bundle configuration
 const webviewConfig: BuildOptions = {
   ...commonConfig,
-  entryPoints: ["./src/webview/index.tsx"],
+  entryPoints: webviewEntryPoints,
   platform: "browser",
   target: "es2020",
   outdir: "./dist/webview",
