@@ -7,6 +7,7 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "dev.Build.sidebarView";
   private _view?: vscode.WebviewView;
   private _items: string[] = [];
+  private _nounce: string = "";
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
@@ -17,13 +18,17 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
    * Generate a nonce string for security
    */
   private getNonce() {
+    if (this._nounce) {
+      return this._nounce;
+    }
     let text = "";
     const possible =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (let i = 0; i < 32; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-    return text;
+    this._nounce = text;
+    return this._nounce;
   }
 
   public resolveWebviewView(
@@ -96,25 +101,17 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
 
     return `<!DOCTYPE html>
       <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
-        <title>Sidebar View</title>
-        <link href="${styleUri}" rel="stylesheet" />
-      </head>
-      <body>
-        <div id="root"></div>
-        <script nonce="${nonce}" src="${scriptUri}"></script>
-        <script>
-          const ws = new WebSocket("ws://localhost:3001");
-          ws.onmessage = (event) => {
-            if (event.data === "reload") {
-              location.reload();
-            }
-          };
-        </script>
-      </body>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
+          <title>Sidebar View</title>
+          <link href="${styleUri}" nonce="${nonce}" rel="stylesheet" />
+        </head>
+        <body>
+          <div id="root"></div>
+          <script nonce="${nonce}" src="${scriptUri}"></script>
+        </body>
       </html>`;
   }
 }

@@ -40,6 +40,16 @@
     "onView:dev.Build.sidebarView"
   ],
   "contributes": {
+    "configuration": {
+      "title": "Dev Build Gamification",
+      "properties": {
+        "devGamification.devMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable developer mode (verbose logging, debug info, etc.)"
+        }
+      }
+    },
     "commands": [
       {
         "command": "dev.Build.helloworld",

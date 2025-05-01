@@ -1,5 +1,4 @@
 import type { BuildOptions } from "esbuild";
-// @ts-expect-error - fast-glob is not typed
 import fg from "fast-glob";
 
 // Common configuration settings
@@ -30,7 +29,9 @@ const extensionConfig: BuildOptions = {
 };
 
 // Dynamically resolve entry points for the webview - exclude CSS files as direct entry points
-const webviewEntryPoints = fg.sync("src/webview/**/*.{ts,tsx}", { ignore: ["**/*.d.ts", "**/*test.{ts,tsx}"] });
+const webviewEntryPoints = fg.sync("src/webview/**/*.{ts,tsx}", {
+  ignore: ["**/*.d.ts", "**/*test.{ts,tsx}"],
+});
 
 // Webview (React) bundle configuration
 const webviewConfig: BuildOptions = {

@@ -5,34 +5,52 @@ import StatsChart from "./statsChart";
 import AchievementsList from "./achievementList";
 import XpProgress from "./xpProgress";
 import ProfileInfo from "./profileInfo";
+import { useVscode } from "../context/vscode";
 
-interface SidebarProps {
-  vscode: {
-    postMessage: (message: any) => void;
-    getState: () => any;
-    setState: (state: any) => void;
-  };
-}
+const Sidebar: React.FC = () => {
+  const vscode = useVscode();
 
-const Sidebar: React.FC<SidebarProps> = ({ vscode }) => {
   const [items, setItems] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    // Send a message to the extension to request initial data
-    vscode.postMessage({ type: "getData" });
+    // Load saved items from globalState when the component mounts
+    const savedItems = vscode.getState()?.items || [];
+    setItems(savedItems);
+
+    // Send a message to the extension to request data
+    vscode.postMessage({
+      type: "getNoteData",
+    });
+
+    // Listen for messages from the extension
+    window.addEventListener("message", (event) => {
+      const message = event.data;
+      switch (message.type) {
+        case "update":
+          setItems(message.data);
+          break;
+        default:
+          console.error("Unknown message type:", message.type);
+      }
+    });
+
+    return () => {
+      // Cleanup event listener on unmount
+      window.removeEventListener("message", () => {});
+    };
   }, [vscode]);
 
   const handleAddItem = () => {
     if (inputValue.trim() !== "") {
-      const newItems = [...items, inputValue];
-      setItems(newItems);
+      const notes = [...items, inputValue];
+      setItems(notes);
       setInputValue("");
 
       // Send the updated items to the extension
       vscode.postMessage({
-        type: "updateItems",
-        items: newItems,
+        type: "updateNotes",
+        notes: notes,
       });
     }
   };
@@ -48,6 +66,26 @@ const Sidebar: React.FC<SidebarProps> = ({ vscode }) => {
   return (
     <div className="sidebar">
       <h2 className="sidebar-title">test</h2>
+      <div className="sidebar-content">
+        <div className="input-group">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Add new item..."
+            className="sidebar-input"
+          />
+          <Button onClick={handleAddItem}> teste Add</Button>
+        </div>
+
+        <ul className="sidebar-list">
+          {items.map((item, index) => (
+            <li key={index} className="sidebar-list-item">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <div className="rpg-dashboard">
         {/* Profile Info Component */}
@@ -74,27 +112,6 @@ const Sidebar: React.FC<SidebarProps> = ({ vscode }) => {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="sidebar-content">
-        <div className="input-group">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Add new item..."
-            className="sidebar-input"
-          />
-          <Button onClick={handleAddItem}> teste Add</Button>
-        </div>
-
-        <ul className="sidebar-list">
-          {items.map((item, index) => (
-            <li key={index} className="sidebar-list-item">
-              {item}
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );

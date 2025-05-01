@@ -31,12 +31,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   );
   const sidebarView = vscode.window.registerWebviewViewProvider(
     SidebarViewProvider.viewType,
-    sidebarProvider,
-    {
-      webviewOptions: {
-        retainContextWhenHidden: true, // Keep the webview state and avoid reloading when hidden
-      },
-    }
+    sidebarProvider
   );
   context.subscriptions.push(sidebarView);
 };
