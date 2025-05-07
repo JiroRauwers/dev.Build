@@ -1,19 +1,6 @@
 import * as vscode from "vscode";
 import { SidebarViewProvider } from "./class/SidebarViewProvider";
 
-/**
- * Generate a nonce string for security
- */
-export function getNonce() {
-  let text = "";
-  const possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
-
 export const activate = (context: vscode.ExtensionContext) => {
   // Register command
   const helloWorldCommand = vscode.commands.registerCommand(

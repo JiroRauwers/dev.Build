@@ -5,7 +5,8 @@
     "@types/vscode": "^1.86.0",
     "lucide-react": "^0.503.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "remeda": "^2.21.3"
   },
   "devDependencies": {
     "@types/bun": "latest",
