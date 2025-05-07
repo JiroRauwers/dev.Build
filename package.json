@@ -40,6 +40,9 @@
   "activationEvents": [
     "onView:dev.Build.sidebarView"
   ],
+  "enabledApiProposals": [
+    "extensionRuntime"
+  ],
   "contributes": {
     "configuration": {
       "title": "Dev Build Gamification",

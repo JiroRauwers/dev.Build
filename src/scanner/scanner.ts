@@ -6,9 +6,11 @@ import { isNotNodeModules } from "../lib/helpers";
 export class Scanner {
   private static _instance: Scanner; // Singleton instance
   private cache: Map<string, string> = new Map(); // Cache for storing scanned files
+  private watcher: vscode.Disposable | null = null;
 
   private includePattern: vscode.GlobPattern = "**/*"; // Include all files
-  private excludePattern: vscode.GlobPattern = "**/node_modules/**"; // Exclude node_modules
+  private excludePattern: vscode.GlobPattern =
+    "**/{node_modules,.git/refs,.git/logs}/**"; // Exclude node_modules
 
   static get instance(): Scanner {
     if (!this._instance) {
@@ -18,10 +20,11 @@ export class Scanner {
   }
 
   async init() {
+    console.log("Initializing scanner...");
     // Do initial scan
     await this.scanFiles();
 
-    this.watch();
+    return this.watch();
   }
 
   async scanFiles() {
@@ -38,6 +41,7 @@ export class Scanner {
       this.cache.set(filePath, Buffer.from(fileContent).toString("utf-8"));
     }
 
+    console.log("Initial files scanned:", Array.from(this.cache.keys()));
     // StatusRegistry.updateAllFromScanner(this.cache);
   }
 
@@ -49,9 +53,36 @@ export class Scanner {
       false
     );
 
-    watcher.onDidChange(R.pipe(R.when(isNotNodeModules, this.updateFile)));
-    watcher.onDidCreate(R.pipe(R.when(isNotNodeModules, this.updateFile)));
-    watcher.onDidDelete(R.pipe(R.when(isNotNodeModules, this.removeFile)));
+    watcher.onDidChange(
+      R.pipe(
+        R.when(isNotNodeModules, (uri) => {
+          console.log(`File changed: ${uri.fsPath}`);
+          this.updateFile(uri);
+        })
+      )
+    );
+    watcher.onDidCreate(
+      R.pipe(
+        R.when(isNotNodeModules, (uri) => {
+          console.log(`File created: ${uri.fsPath}`);
+          this.updateFile(uri);
+        })
+      )
+    );
+    watcher.onDidDelete(
+      R.pipe(
+        R.when(isNotNodeModules, (uri) => {
+          console.log(`File deleted: ${uri.fsPath}`);
+          this.removeFile(uri);
+        })
+      )
+    );
+  }
+
+  dispose() {
+    if (this.watcher) {
+      this.watcher.dispose();
+    }
   }
 
   private async updateFile(uri: vscode.Uri) {
