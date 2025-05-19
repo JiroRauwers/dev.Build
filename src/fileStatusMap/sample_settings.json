@@ -1,0 +1,72 @@
+{
+  "displayedStatus": ["tsFileCount"],
+  "cachedvalues": [
+    {
+      "id": "testFiles",
+      "rules": [
+        {
+          "ruleId": "filterFilesByName",
+          "params": ["*.test.ts", "*.spec.ts"]
+        }
+      ]
+    },
+    {
+      "id": "allTsFiles",
+      "rules": ["filterTsFiles"]
+    }
+  ],
+  "status": [
+    {
+      "id": "tsFileCount",
+      "rules": [
+        {
+          "ruleId": "getCachedValue",
+          "params": ["allTsFiles"]
+        },
+        "count"
+      ],
+      "constraints": {
+        "any": [{ "fileType": "typescript" }, { "filename": "*.(ts|tsx)" }]
+      },
+      "initialValue": 0
+    },
+    {
+      "id": "NodeProject",
+      "rules": [
+        {
+          "ruleId": "filterFilesByName",
+          "params": {
+            "includes": "**/*package.json",
+            "excludes": "**/node_modules/**"
+          }
+        },
+        "boolean"
+      ],
+      "initialValue": false,
+      "constraints": {
+        "filename": "*package.json"
+      }
+    },
+    {
+      "id": "provisoryUsingTests",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "getCachedValue",
+          "params": ["testFiles"]
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        "count",
+        "boolean"
+      ],
+      "constraints": {
+        "all": [
+          { "filename": "*.(ts|tsx)" },
+          { "filename": ["*.test.*", "*.specs.*"] }
+        ]
+      }
+    }
+  ]
+}
