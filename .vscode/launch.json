@@ -10,7 +10,7 @@
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "--enable-proposed-api=dev-dot-build.extensionRuntime",
+        "--enable-proposed-api=JiroRauwers.dev-dot-build",
         "--disable-extensions"
       ],
       "outFiles": ["${workspaceFolder}/dist/**/*.cjs"],

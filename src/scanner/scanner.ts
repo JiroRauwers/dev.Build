@@ -150,6 +150,12 @@ export class Scanner {
         })
       )
     );
+
+    // Store the watcher in the instance property so it doesn't get garbage collected
+    this.watcher = watcher;
+
+    console.log("File system watcher is now active");
+    return this.watcher;
   }
 
   dispose() {
@@ -182,6 +188,8 @@ export class Scanner {
         ...enhancedMetadata, // Merge in the enhanced metadata
       },
     };
+
+    console.log('new file content', {fileData})
 
     this.cache.set(normalizedPath, fileData);
     // StatusRegistry.updateFromScanner(normalizedPath, this.cache.get(normalizedPath));

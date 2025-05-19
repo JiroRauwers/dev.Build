@@ -29,6 +29,7 @@
     "clean": "rm -r ./dist"
   },
   "//": "START EXTENSION ATTRIBUTES",
+  "publisher": "JiroRauwers",
   "name": "dev-dot-build",
   "version": "0.0.1",
   "description": "Extension description",
@@ -38,7 +39,7 @@
     "url": "https://github.com/JiroRauwers/dev.Build.git"
   },
   "activationEvents": [
-    "onView:dev.Build.sidebarView"
+    "*"
   ],
   "enabledApiProposals": [
     "extensionRuntime"
@@ -80,6 +81,6 @@
     }
   },
   "engines": {
-    "vscode": "^1.86.0"
+    "vscode": "^1.90.0-insider"
   }
 }
