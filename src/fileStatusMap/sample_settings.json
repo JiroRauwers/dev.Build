@@ -1,54 +1,71 @@
 {
-  "displayedStatus": ["tsFileCount"],
-  "cachedvalues": [
+  "displayedStatus": ["tsFileCount", "NodeProject", "usesTabsInTests"],
+
+  "cachedValues": [
     {
       "id": "testFiles",
       "rules": [
         {
-          "ruleId": "filterFilesByName",
-          "params": ["*.test.ts", "*.spec.ts"]
+          "ruleId": "filterByNormalizedPath",
+          "params": ["**/*.test.ts", "**/*.spec.ts"]
         }
       ]
     },
     {
       "id": "allTsFiles",
-      "rules": ["filterTsFiles"]
+      "rules": [
+        {
+          "ruleId": "filterByExtension",
+          "params": [".ts", ".tsx"]
+        }
+      ]
     }
   ],
+
   "status": [
     {
       "id": "tsFileCount",
+      "initialValue": 0,
       "rules": [
         {
           "ruleId": "getCachedValue",
           "params": ["allTsFiles"]
         },
-        "count"
-      ],
-      "constraints": {
-        "any": [{ "fileType": "typescript" }, { "filename": "*.(ts|tsx)" }]
-      },
-      "initialValue": 0
-    },
-    {
-      "id": "NodeProject",
-      "rules": [
         {
-          "ruleId": "filterFilesByName",
-          "params": {
-            "includes": "**/*package.json",
-            "excludes": "**/node_modules/**"
-          }
-        },
-        "boolean"
+          "ruleId": "count"
+        }
       ],
-      "initialValue": false,
       "constraints": {
-        "filename": "*package.json"
+        "any": [
+          { "metadata.languageId": "typescript" },
+          { "metadata.extension": ".ts" },
+          { "metadata.extension": ".tsx" }
+        ]
       }
     },
+
     {
-      "id": "provisoryUsingTests",
+      "id": "NodeProject",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": {
+            "includes": ["**/package.json"],
+            "excludes": ["**/node_modules/**"]
+          }
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ],
+      "constraints": {
+        "all": [{ "metadata.normalizedPath": "**/package.json" }]
+      }
+    },
+
+    {
+      "id": "usesTabsInTests",
       "initialValue": false,
       "rules": [
         {
@@ -56,17 +73,23 @@
           "params": ["testFiles"]
         },
         {
+          "ruleId": "filterByIndentation",
+          "params": { "useTabs": true }
+        },
+        {
           "ruleId": "checkNotEmpty"
         },
-        "count",
-        "boolean"
+        {
+          "ruleId": "boolean"
+        }
       ],
       "constraints": {
         "all": [
-          { "filename": "*.(ts|tsx)" },
-          { "filename": ["*.test.*", "*.specs.*"] }
+          { "metadata.indentation.useTabs": true },
+          { "metadata.extension": ".ts" }
         ]
       }
     }
   ]
 }
+  

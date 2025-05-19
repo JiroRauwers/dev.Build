@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
 import { SidebarViewProvider } from "./class/SidebarViewProvider";
 import { Scanner } from "./scanner/scanner";
+import type { Calculator } from "./fileStatusMap/calculator";
 
 let scanner: Scanner;
+let calculator: Calculator;
 
 export const activate = (context: vscode.ExtensionContext) => {
   console.log("Extension activated!");

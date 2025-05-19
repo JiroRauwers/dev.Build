@@ -3,6 +3,7 @@ import * as path from "path";
 import * as R from "remeda";
 import * as fs from "fs";
 import { isNotNodeModules } from "../lib/helpers";
+import { Calculator } from "../fileStatusMap/calculator";
 
 /**
  * Interface for file data stored in the cache
@@ -110,12 +111,12 @@ export class Scanner {
         },
       };
 
-      console.log({ normalizedPath, fileData });
+      // console.log({ normalizedPath, fileData });
       this.cache.set(normalizedPath, fileData);
     }
 
-    console.log("Initial files scanned:", Array.from(this.cache.keys()));
-    // StatusRegistry.updateAllFromScanner(this.cache);
+    // console.log("Initial files scanned:", Array.from(this.cache.keys()));
+    Calculator.instance.updateFromScanner(this.cache);
   }
 
   watch() {
@@ -129,7 +130,7 @@ export class Scanner {
     watcher.onDidChange(
       R.pipe(
         R.when(isNotNodeModules, (uri) => {
-          console.log(`File changed: ${uri.fsPath}`);
+          // console.log(`File changed: ${uri.fsPath}`);
           this.updateFile(uri);
         })
       )
@@ -137,7 +138,7 @@ export class Scanner {
     watcher.onDidCreate(
       R.pipe(
         R.when(isNotNodeModules, (uri) => {
-          console.log(`File created: ${uri.fsPath}`);
+          // console.log(`File created: ${uri.fsPath}`);
           this.updateFile(uri);
         })
       )
@@ -145,7 +146,7 @@ export class Scanner {
     watcher.onDidDelete(
       R.pipe(
         R.when(isNotNodeModules, (uri) => {
-          console.log(`File deleted: ${uri.fsPath}`);
+          // console.log(`File deleted: ${uri.fsPath}`);
           this.removeFile(uri);
         })
       )
@@ -165,7 +166,7 @@ export class Scanner {
   }
 
   private async updateFile(uri: vscode.Uri) {
-    console.log(`Updating file: ${uri.fsPath}`);
+    // console.log(`Updating file: ${uri.fsPath}`);
     const normalizedPath = this.normalizeFilePath(uri.fsPath);
     const content = await vscode.workspace.fs.readFile(uri);
     const contentString = Buffer.from(content).toString("utf-8");
@@ -189,10 +190,10 @@ export class Scanner {
       },
     };
 
-    console.log('new file content', {fileData})
+    // console.log("new file content", { fileData });
 
     this.cache.set(normalizedPath, fileData);
-    // StatusRegistry.updateFromScanner(normalizedPath, this.cache.get(normalizedPath));
+    Calculator.instance.updateFromScanner(this.cache);
   }
 
   /**
@@ -212,34 +213,36 @@ export class Scanner {
       metadata.extension = path.extname(uri.fsPath);
 
       // Try to determine language ID based on the file
-      const textDocument = await vscode.workspace.openTextDocument(uri);
-      metadata.languageId = textDocument.languageId;
+      try {
+        const textDocument = await vscode.workspace.openTextDocument(uri);
+        metadata.languageId = textDocument.languageId;
+        metadata.eol = textDocument.eol;
+        metadata.lineEnding =
+          textDocument.eol === vscode.EndOfLine.CRLF ? "CRLF" : "LF";
+        // Get indentation settings - first try document-specific settings
+        const indentUseTabs =
+          textDocument.uri &&
+          vscode.window.visibleTextEditors.find(
+            (editor) =>
+              editor.document.uri.toString() === textDocument.uri.toString()
+          )?.options.insertSpaces === false;
 
-      // Get line ending type
-      metadata.eol = textDocument.eol;
-      metadata.lineEnding =
-        textDocument.eol === vscode.EndOfLine.CRLF ? "CRLF" : "LF";
+        // If not found, get workspace settings for this language
+        const config = vscode.workspace.getConfiguration("editor", {
+          languageId: textDocument.languageId,
+        });
 
-      // Get indentation settings - first try document-specific settings
-      const indentUseTabs =
-        textDocument.uri &&
-        vscode.window.visibleTextEditors.find(
-          (editor) =>
-            editor.document.uri.toString() === textDocument.uri.toString()
-        )?.options.insertSpaces === false;
-
-      // If not found, get workspace settings for this language
-      const config = vscode.workspace.getConfiguration("editor", {
-        languageId: textDocument.languageId,
-      });
-
-      metadata.indentation = {
-        useTabs:
-          indentUseTabs !== undefined
-            ? indentUseTabs
-            : !config.get("insertSpaces", true),
-        tabSize: Number(config.get("tabSize", 4)),
-      };
+        metadata.indentation = {
+          useTabs:
+            indentUseTabs !== undefined
+              ? indentUseTabs
+              : !config.get("insertSpaces", true),
+          tabSize: Number(config.get("tabSize", 4)),
+        };
+      } catch (err) {
+        // Could not open as text (likely binary), skip text-specific metadata
+        console.warn(`Skipping text metadata for ${uri.fsPath}:`, err);
+      }
 
       // Try to determine if the file is read-only
       try {
@@ -274,7 +277,6 @@ export class Scanner {
       }
     } catch (error) {
       console.error(`Error collecting metadata for ${uri.fsPath}:`, error);
-      // Return partial metadata if there's an error collecting some information
     }
 
     return metadata;
@@ -328,9 +330,9 @@ export class Scanner {
   }
 
   private async removeFile(uri: vscode.Uri) {
-    console.log(`Removing file: ${uri.fsPath}`);
+    // console.log(`Removing file: ${uri.fsPath}`);
     const normalizedPath = this.normalizeFilePath(uri.fsPath);
     this.cache.delete(normalizedPath);
-    // StatusRegistry.removeFromScanner(normalizedPath);
+    Calculator.instance.updateFromScanner(this.cache);
   }
 }
