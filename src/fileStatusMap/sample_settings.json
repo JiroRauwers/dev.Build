@@ -51,7 +51,7 @@
         {
           "ruleId": "filterByNormalizedPath",
           "params": {
-            "includes": ["**/package.json"],
+            "includes": ["**package.json"],
             "excludes": ["**/node_modules/**"]
           }
         },

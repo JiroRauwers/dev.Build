@@ -3,31 +3,8 @@ import * as path from "path";
 import * as R from "remeda";
 import * as fs from "fs";
 import { isNotNodeModules } from "../lib/helpers";
-import { Calculator } from "../fileStatusMap/calculator";
-
-/**
- * Interface for file data stored in the cache
- */
-interface FileData {
-  content: string;
-  metadata: {
-    lastModified: Date;
-    size: number;
-    normalizedPath: string;
-    fullPath: string;
-    // Enhanced metadata
-    languageId?: string; // Language identifier for syntax highlighting
-    lineEnding?: string; // CRLF or LF
-    indentation?: {
-      useTabs: boolean;
-      tabSize: number;
-    };
-    encoding?: string; // File encoding (utf-8, utf-16, etc.)
-    extension?: string; // File extension
-    isReadOnly?: boolean; // Whether the file is read-only
-    eol?: vscode.EndOfLine; // End of line sequence
-  };
-}
+import { Calculator } from "./Calculator";
+import type { FileData } from "../types/FileData";
 
 export class Scanner {
   private static _instance: Scanner; // Singleton instance
@@ -111,11 +88,10 @@ export class Scanner {
         },
       };
 
-      // console.log({ normalizedPath, fileData });
       this.cache.set(normalizedPath, fileData);
     }
 
-    // console.log("Initial files scanned:", Array.from(this.cache.keys()));
+    console.log("📂 Files scanned:", Array.from(this.cache.keys()));
     Calculator.instance.updateFromScanner(this.cache);
   }
 

@@ -14,6 +14,7 @@
     "@types/react-dom": "^19.1.2",
     "@vscode/vsce": "^2.23.0",
     "esbuild": "^0.20.0",
+    "esbuild-plugin-glob": "^2.2.3",
     "fast-glob": "^3.3.3"
   },
   "peerDependencies": {
@@ -21,6 +22,7 @@
   },
   "type": "module",
   "scripts": {
+    "prebuild": "bun run scripts/generate-rule-index.ts",
     "dev": "echo 'Open this directory in VSCode and then run your extension with F5 or `Run and Debug > Run Extension`!'",
     "build": "bun run ./scripts/build-with-esbuild.ts",
     "watch": "bun run ./scripts/watch-with-esbuild.ts",
@@ -57,8 +59,19 @@
     },
     "commands": [
       {
-        "command": "dev.Build.helloworld",
-        "title": "Hello World"
+        "command": "dev.Build.logDisplayedStatus",
+        "title": "Log displayed status",
+        "category": "Dev.Build"
+      },
+      {
+        "command": "dev.Build.logStatus",
+        "title": "Log All status",
+        "category": "Dev.Build"
+      },
+      {
+        "command": "dev.Build.scanFiles",
+        "title": "Scan Files",
+        "category": "Dev.Build"
       }
     ],
     "viewsContainers": {

@@ -1,4 +1,5 @@
 import type { BuildOptions } from "esbuild";
+import { globPlugin } from "esbuild-plugin-glob";
 import fg from "fast-glob";
 
 // Common configuration settings
@@ -20,6 +21,7 @@ const extensionConfig: BuildOptions = {
   outExtension: {
     ".js": ".cjs",
   },
+  plugins: [globPlugin()],
   format: "cjs",
   external: ["vscode"],
   loader: {
