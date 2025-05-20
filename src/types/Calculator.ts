@@ -7,11 +7,13 @@ export interface RuleConfig {
 export interface CachedValueConfig {
   id: string;
   rules: RuleConfig[];
+  constraints?: ConstraintGroup;
 }
 
 export interface ConstraintGroup {
   any?: Record<string, any>[];
   all?: Record<string, any>[];
+  none?: Record<string, any>[];
 }
 
 export interface StatusConfig {
