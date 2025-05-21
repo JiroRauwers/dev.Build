@@ -1,0 +1,417 @@
+{
+  "displayedStatus": ["tsFileCount", "NodeProject", "usesTabsInTests"],
+  "cachedValues": [
+    {
+      "id": "testFiles",
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": ["/^.*\\.test\\..*$/", "/^.*\\.spec\\..*$/"]
+        }
+      ]
+    },
+    {
+      "id": "allTsFiles",
+      "rules": [
+        {
+          "ruleId": "filterByExtension",
+          "params": [".ts", ".tsx"]
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "id": "tsFileCount",
+      "initialValue": 0,
+      "rules": [
+        {
+          "ruleId": "getCachedValue",
+          "params": ["allTsFiles"]
+        },
+        {
+          "ruleId": "count"
+        }
+      ],
+      "constraints": {
+        "any": [
+          {
+            "metadata.languageId": "typescript"
+          },
+          {
+            "metadata.extension": ".ts"
+          },
+          {
+            "metadata.extension": ".tsx"
+          }
+        ]
+      }
+    },
+    {
+      "id": "NodeProject",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": {
+            "includes": ["/.*package.json$/"],
+            "excludes": ["/node_modules/"]
+          }
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ],
+      "constraints": {
+        "all": [
+          {
+            "metadata.normalizedPath": "/.*package.json$/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "usesTabsInTests",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "getCachedValue",
+          "params": ["testFiles"]
+        },
+        {
+          "ruleId": "filterByIndentation",
+          "params": {
+            "useTabs": true
+          }
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ],
+      "constraints": {
+        "all": [
+          {
+            "metadata.indentation.useTabs": true
+          },
+          {
+            "metadata.extension": ".ts"
+          }
+        ]
+      }
+    },
+    {
+      "id": "LargeFilesExist",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByLineCount",
+          "params": {
+            "min": 1000
+          }
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "HasReadOnlyFiles",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByReadOnly",
+          "params": true
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "UsesUTF16Encoding",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByEncoding",
+          "params": ["utf-16"]
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "HasJsonConfigs",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": [
+            "**/tsconfig.json",
+            "**/.eslintrc.json",
+            "**/.prettierrc.json"
+          ]
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "MixedLineEndings",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "getLineEndingVariants"
+        },
+        {
+          "ruleId": "checkGreaterThan",
+          "params": [1]
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "TestCoverageRatio",
+      "initialValue": 0,
+      "rules": [
+        {
+          "ruleId": "getCachedValue",
+          "params": ["testFiles"]
+        },
+        {
+          "ruleId": "count"
+        },
+        {
+          "ruleId": "divideByCachedValue",
+          "params": ["allTsFiles"]
+        }
+      ]
+    },
+    {
+      "id": "IsMonorepo",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": ["**/package.json"]
+        },
+        {
+          "ruleId": "count"
+        },
+        {
+          "ruleId": "checkGreaterThan",
+          "params": [1]
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "UsesTabsGlobally",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByIndentation",
+          "params": {
+            "useTabs": true
+          }
+        },
+        {
+          "ruleId": "compareCountWithTotalFiles",
+          "params": "equals"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "OnlyUsesLF",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByLineEnding",
+          "params": "LF"
+        },
+        {
+          "ruleId": "compareCountWithTotalFiles",
+          "params": "equals"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "AllFilesUTF8",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByEncoding",
+          "params": ["utf-8"]
+        },
+        {
+          "ruleId": "compareCountWithTotalFiles",
+          "params": "equals"
+        },
+        {
+          "ruleId": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "UsesExpress",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "containsImport",
+          "params": ["express"]
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "AllFilesUseTabs",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByIndentation",
+          "params": {
+            "useTabs": true
+          }
+        },
+        {
+          "ruleId": "compareCountWithTotalFiles",
+          "params": "equals"
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "HasMixedLineEndings",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "getLineEndingVariants"
+        },
+        {
+          "ruleId": "checkGreaterThan",
+          "params": [1]
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "ContainsTypeDefinitions",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": ["**/*.d.ts"]
+        },
+        {
+          "ruleId": "checkNotEmpty"
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "StrictModeEnabled",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "detectTsStrictMode"
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "HasPrettierConfig",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": ["**/.prettierrc.json"]
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "UsesNextPagesRouter",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": ["**/pages/**"]
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "UsesNextAppRouter",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": ["**/app/**"]
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "UsesNextJS",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "hasDependency",
+          "params": ["next"]
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "HasReactDependency",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "hasDependency",
+          "params": ["react"]
+        },
+        "boolean"
+      ]
+    },
+    {
+      "id": "IsTypeScriptProject",
+      "initialValue": false,
+      "rules": [
+        {
+          "ruleId": "filterByNormalizedPath",
+          "params": ["**/tsconfig.json"]
+        },
+        "boolean"
+      ]
+    }
+  ]
+}

@@ -1,13 +1,5 @@
 import * as vscode from "vscode";
-import { SidebarViewProvider } from "./core/SidebarViewProvider";
-import { Scanner } from "./core/scanner";
-import { Calculator } from "./core/Calculator";
-import settingsJson from "./fileStatusMap/sample_settings.json";
-import type { Settings } from "./types/Calculator";
-import { loadAllRules } from "./core/LoadRules";
-
-const settings: Settings = settingsJson;
-Calculator.instance.loadSettings(settings);
+import { Scanner, Calculator, loadAllRules, SidebarViewProvider } from "./core";
 
 let scanner: Scanner;
 
@@ -35,11 +27,6 @@ export const activate = (context: vscode.ExtensionContext) => {
     .catch((err) => {
       console.error("Failed to initialize scanner:", err);
     });
-
-  Calculator.instance.evaluateCachedValues();
-
-  const allTsFiles = Calculator.instance.getNamedValue("allTsFiles");
-  console.log("All TS files count:", allTsFiles.length);
 
   // Register sidebar view provider
   const sidebarProvider = new SidebarViewProvider(
